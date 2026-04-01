@@ -4,115 +4,346 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Неделя 1 — План тренировок</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:'Inter',sans-serif;background:linear-gradient(135deg,#1a0f05,#0b0b0b);color:#fff7ed}
-.container{max-width:900px;margin:auto;padding:16px 14px 40px}
-h1{font-size:28px;color:#fb923c}
-.subtitle{color:#fdba74;margin-bottom:20px}
-.day-card{margin-bottom:16px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08)}
-.day-header{padding:14px;display:flex;justify-content:space-between;cursor:pointer;font-weight:600}
-.day-content{padding:12px;display:none}
-.day-card.active .day-content{display:block}
-.exercise{margin-bottom:12px;padding:12px;border-radius:12px;background:rgba(255,255,255,0.05)}
-.badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;margin-bottom:6px;background:#fb923c33;color:#fb923c}
-textarea{width:100%;height:70px;margin-top:8px;background:#1c1917;color:#fff7ed;border:1px solid #444;border-radius:8px;padding:8px;font-size:13px}
-.day1 .day-header{background:#fb923c;color:#000}
-.day2 .day-header{background:#fdba74;color:#000}
-.day3 .day-header{background:#f97316}
-.day4 .day-header{background:#ea580c}
-.day5 .day-header{background:#fb923c}
-.day6 .day-header{background:#fdba74;color:#000}
-.day7 .day-header{background:#f97316}
-.day-image{width:100%;height:140px;object-fit:cover}
-.footer{text-align:center;color:#fdba74;margin-top:20px}
-.sticky-top{position:sticky;top:0;background:#0b0b0b}
+
+body{
+margin:0;
+font-family:'Inter',sans-serif;
+background:#f5f5f5;
+color:#111;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:16px 14px 40px;
+}
+
+h1{
+font-size:26px;
+margin-bottom:4px;
+}
+
+.subtitle{
+color:#555;
+margin-bottom:20px;
+}
+
+.day-card{
+margin-bottom:12px;
+border-radius:10px;
+overflow:hidden;
+border:1px solid #ddd;
+background:#fff;
+}
+
+.day-header{
+padding:14px;
+display:flex;
+justify-content:space-between;
+cursor:pointer;
+font-weight:600;
+background:#eee;
+}
+
+.day-content{
+padding:12px;
+display:none;
+}
+
+.day-card.active .day-content{
+display:block;
+}
+
+.exercise{
+margin-bottom:10px;
+padding:10px;
+border-radius:8px;
+background:#fafafa;
+border:1px solid #e5e5e5;
+font-size:14px;
+}
+
+.badge{
+display:inline-block;
+padding:2px 6px;
+border-radius:6px;
+font-size:11px;
+margin-bottom:4px;
+background:#e5e5e5;
+}
+
+textarea{
+width:100%;
+height:70px;
+margin-top:6px;
+background:#fff;
+color:#111;
+border:1px solid #ccc;
+border-radius:6px;
+padding:8px;
+font-size:13px;
+}
+
+.footer{
+text-align:center;
+color:#666;
+margin-top:20px;
+font-size:13px;
+}
+
+.sticky-top{
+position:sticky;
+top:0;
+background:#f5f5f5;
+padding-bottom:8px;
+}
 </style>
 </head>
+
 <body>
+
 <div class="container">
+
 <div class="sticky-top">
 <h1>Неделя 1</h1>
 <div class="subtitle">Система тренировок</div>
 </div>
 
 <!-- DAY 1 -->
-<div class="day-card day1 active">
-<img class="day-image" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b"/>
+<div class="day-card active">
 <div class="day-header"><span>День 1 — СИЛОВАЯ</span><span>▼</span></div>
 <div class="day-content">
-<div class="exercise"><span class="badge">Ноги</span><br><b>Приседания со штангой</b><br>4×8 → 50 кг<br>RPE: 7 (2–3 повтора в запасе)<br>Отдых: 2–3 мин<br>Комментарий: техника важнее веса<textarea data-id="d1e1"></textarea></div>
-<div class="exercise"><span class="badge">Грудь</span><br><b>Жим штанги лёжа</b><br>4×10 → 42.5 кг<br>RPE: 7–8<br>Отдых: 2 мин<br>Комментарий<textarea data-id="d1e2"></textarea></div>
-<div class="exercise"><b>Тяга штанги в наклоне</b><br>4×10 → 37.5 кг<br>RPE: 7<br>Отдых: 2 мин<textarea data-id="d1e3"></textarea></div>
-<div class="exercise"><b>Подтягивания</b><br>4×6–7<br>RPE: 8<br>Отдых: 2 мин<textarea data-id="d1e4"></textarea></div>
-<div class="exercise"><b>Планка</b><br>3×40–60 сек<br>Отдых: 60 сек<textarea data-id="d1e5"></textarea></div>
-</div></div>
+
+<div class="exercise">
+<span class="badge">Ноги</span><br>
+<b>Приседания со штангой</b><br>
+4×8 → 50 кг<br>
+RPE: 7<br>
+Отдых: 2–3 мин<br>
+<textarea data-id="d1e1"></textarea>
+</div>
+
+<div class="exercise">
+<span class="badge">Грудь</span><br>
+<b>Жим штанги лёжа</b><br>
+4×10 → 42.5 кг<br>
+RPE: 7–8<br>
+Отдых: 2 мин<br>
+<textarea data-id="d1e2"></textarea>
+</div>
+
+<div class="exercise">
+<b>Тяга штанги в наклоне</b><br>
+4×10 → 37.5 кг<br>
+RPE: 7<br>
+Отдых: 2 мин<br>
+<textarea data-id="d1e3"></textarea>
+</div>
+
+<div class="exercise">
+<b>Подтягивания</b><br>
+4×6–7<br>
+RPE: 8<br>
+Отдых: 2 мин<br>
+<textarea data-id="d1e4"></textarea>
+</div>
+
+<div class="exercise">
+<b>Планка</b><br>
+3×40–60 сек<br>
+Отдых: 60 сек<br>
+<textarea data-id="d1e5"></textarea>
+</div>
+
+<div class="exercise">
+<b>Прогрессия</b><br>
+Если легко → +2.5 кг<br>
+<textarea data-id="d1prog"></textarea>
+</div>
+
+</div>
+</div>
 
 <!-- DAY 2 -->
-<div class="day-card day2">
-<img class="day-image" src="https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf"/>
+<div class="day-card">
 <div class="day-header"><span>День 2 — БЕГ</span><span>▼</span></div>
 <div class="day-content">
-<div class="exercise">5 км<br>Темп: 6:50–7:10 / км<br>Пульс ≤150<br>Комментарий<textarea data-id="d2e1"></textarea></div>
-</div></div>
+
+<div class="exercise">
+5 км<br>
+Темп: 6:50–7:10 / км<br>
+Пульс ≤150<br>
+RPE: 5–6<br>
+<textarea data-id="d2e1"></textarea>
+</div>
+
+</div>
+</div>
 
 <!-- DAY 3 -->
-<div class="day-card day3">
-<img class="day-image" src="https://images.unsplash.com/photo-1558611848-73f7eb4001a1"/>
+<div class="day-card">
 <div class="day-header"><span>День 3 — СИЛОВАЯ</span><span>▼</span></div>
 <div class="day-content">
-<div class="exercise"><b>Становая тяга</b><br>4×6 → 60 кг<br>RPE: 7<br>Отдых: 2–3 мин<textarea data-id="d3e1"></textarea></div>
-<div class="exercise"><b>Жим гантелей</b><br>4×10 → 16 кг<br>RPE: 8<br>Отдых: 90 сек<textarea data-id="d3e2"></textarea></div>
-<div class="exercise"><b>Тяга верхнего блока</b><br>4×10 → 45 кг<br>RPE: 7<textarea data-id="d3e3"></textarea></div>
-<div class="exercise"><b>Выпады</b><br>3×10<textarea data-id="d3e4"></textarea></div>
-<div class="exercise"><b>Скручивания</b><br>3×15<textarea data-id="d3e5"></textarea></div>
-</div></div>
+
+<div class="exercise">
+<b>Становая тяга</b><br>
+4×6 → 60 кг<br>
+RPE: 7<br>
+Отдых: 2–3 мин<br>
+<textarea data-id="d3e1"></textarea>
+</div>
+
+<div class="exercise">
+<b>Жим гантелей</b><br>
+4×10 → 16 кг<br>
+RPE: 8<br>
+Отдых: 90 сек<br>
+<textarea data-id="d3e2"></textarea>
+</div>
+
+<div class="exercise">
+<b>Тяга верхнего блока</b><br>
+4×10 → 45 кг<br>
+RPE: 7<br>
+<textarea data-id="d3e3"></textarea>
+</div>
+
+<div class="exercise">
+<b>Выпады</b><br>
+3×10<br>
+<textarea data-id="d3e4"></textarea>
+</div>
+
+<div class="exercise">
+<b>Скручивания</b><br>
+3×15<br>
+<textarea data-id="d3e5"></textarea>
+</div>
+
+</div>
+</div>
 
 <!-- DAY 4 -->
-<div class="day-card day4">
-<img class="day-image" src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438"/>
+<div class="day-card">
 <div class="day-header"><span>День 4 — ВОССТАНОВЛЕНИЕ</span><span>▼</span></div>
 <div class="day-content">
-<div class="exercise">6–8 тыс. шагов + мобилка<textarea data-id="d4e1"></textarea></div>
-</div></div>
+
+<div class="exercise">
+6–8 тыс. шагов + мобилка<br>
+RPE: 3–4<br>
+<textarea data-id="d4e1"></textarea>
+</div>
+
+</div>
+</div>
 
 <!-- DAY 5 -->
-<div class="day-card day5">
-<img class="day-image" src="https://images.unsplash.com/photo-1599058917212-d750089bc07e"/>
+<div class="day-card">
 <div class="day-header"><span>День 5 — ИНТЕРВАЛЫ</span><span>▼</span></div>
 <div class="day-content">
-<div class="exercise">Разминка 1.5 км<textarea data-id="d5e1"></textarea></div>
-<div class="exercise">4×800 м<br>Темп: 6:00<br>Отдых<textarea data-id="d5e2"></textarea></div>
-<div class="exercise">Заминка<textarea data-id="d5e3"></textarea></div>
-</div></div>
+
+<div class="exercise">
+Разминка 1.5 км<br>
+<textarea data-id="d5e1"></textarea>
+</div>
+
+<div class="exercise">
+4×800 м<br>
+Темп: 6:00 / км<br>
+Отдых: 2–3 мин<br>
+RPE: 8<br>
+<textarea data-id="d5e2"></textarea>
+</div>
+
+<div class="exercise">
+Заминка<br>
+<textarea data-id="d5e3"></textarea>
+</div>
+
+</div>
+</div>
 
 <!-- DAY 6 -->
-<div class="day-card day6">
-<img class="day-image" src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd"/>
+<div class="day-card">
 <div class="day-header"><span>День 6 — СИЛОВАЯ</span><span>▼</span></div>
 <div class="day-content">
-<div class="exercise"><b>Присед</b><br>3×10 → 45 кг<br>RPE: 6<textarea data-id="d6e1"></textarea></div>
-<div class="exercise"><b>Жим лёжа</b><br>3×8 → 45 кг<br>RPE: 8<textarea data-id="d6e2"></textarea></div>
-<div class="exercise"><b>Тяга блока</b><br>4×10<textarea data-id="d6e3"></textarea></div>
-<div class="exercise"><b>Брусья</b><br>3×10<textarea data-id="d6e4"></textarea></div>
-<div class="exercise"><b>Бицепс</b><br>3×10<textarea data-id="d6e5"></textarea></div>
-<div class="exercise"><b>Планка боковая</b><br>3×30<textarea data-id="d6e6"></textarea></div>
-</div></div>
+
+<div class="exercise">
+<b>Присед</b><br>
+3×10 → 45 кг<br>
+RPE: 6<br>
+<textarea data-id="d6e1"></textarea>
+</div>
+
+<div class="exercise">
+<b>Жим лёжа</b><br>
+3×8 → 45 кг<br>
+RPE: 8<br>
+<textarea data-id="d6e2"></textarea>
+</div>
+
+<div class="exercise">
+<b>Тяга блока</b><br>
+4×10<br>
+<textarea data-id="d6e3"></textarea>
+</div>
+
+<div class="exercise">
+<b>Брусья</b><br>
+3×10<br>
+<textarea data-id="d6e4"></textarea>
+</div>
+
+<div class="exercise">
+<b>Планка боковая</b><br>
+3×30<br>
+<textarea data-id="d6e6"></textarea>
+</div>
+
+</div>
+</div>
 
 <!-- DAY 7 -->
-<div class="day-card day7">
-<img class="day-image" src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8"/>
+<div class="day-card">
 <div class="day-header"><span>День 7 — ДЛИННЫЙ БЕГ</span><span>▼</span></div>
 <div class="day-content">
-<div class="exercise">6–7 км<br>Темп: 7:00<textarea data-id="d7e1"></textarea></div>
-</div></div>
+
+<div class="exercise">
+6–7 км<br>
+Темп: 7:00<br>
+RPE: 6<br>
+<textarea data-id="d7e1"></textarea>
+</div>
+
+</div>
+</div>
 
 <div class="footer">Дисциплина = результат</div>
+
 </div>
+
 <script>
-document.querySelectorAll('textarea').forEach(a=>{const k=a.dataset.id;a.value=localStorage.getItem(k)||'';a.addEventListener('input',()=>localStorage.setItem(k,a.value))})
-document.querySelectorAll('.day-header').forEach(h=>h.addEventListener('click',()=>h.parentElement.classList.toggle('active')))
+document.querySelectorAll('textarea').forEach(a=>{
+const k=a.dataset.id;
+a.value=localStorage.getItem(k)||'';
+a.addEventListener('input',()=>localStorage.setItem(k,a.value))
+})
+
+document.querySelectorAll('.day-header').forEach(h =>
+h.addEventListener('click', () => {
+const card = h.parentElement;
+card.classList.toggle('active');
+if(card.classList.contains('active')){
+card.scrollIntoView({behavior:'smooth', block:'start'});
+}
+})
+)
 </script>
+
 </body>
 </html>
