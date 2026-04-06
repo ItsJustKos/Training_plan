@@ -346,11 +346,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // userId
-let userId = localStorage.getItem('userId');
-if(!userId){
-  userId = 'user_' + Math.random().toString(36).substr(2,9);
-  localStorage.setItem('userId', userId);
-}
+const userId = "kostya"; // любое имя, но ОДИНАКОВОЕ на всех устройствах
 
 // TEXTAREA (главное)
 document.querySelectorAll('textarea').forEach(area=>{
