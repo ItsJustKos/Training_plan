@@ -77,6 +77,24 @@ top:0;
 background:#f5f5f5;
 padding-bottom:8px;
 }
+.save-status{
+position:fixed;
+bottom:16px;
+left:50%;
+transform:translateX(-50%);
+background:#111;
+color:#fff;
+padding:8px 14px;
+border-radius:8px;
+font-size:13px;
+opacity:0;
+transition:opacity 0.3s;
+pointer-events:none;
+}
+
+.save-status.show{
+opacity:1;
+}
 </style>
 </head>
 
@@ -345,6 +363,18 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+function showStatus(text, isError=false){
+  const el = document.getElementById('saveStatus');
+  el.textContent = text;
+  el.style.background = isError ? '#c0392b' : '#111';
+  el.classList.add('show');
+
+  clearTimeout(el.hideTimeout);
+  el.hideTimeout = setTimeout(()=>{
+    el.classList.remove('show');
+  }, 1500);
+}
+
 // userId
 const userId = "kostya!23-74che"; // любое имя, но ОДИНАКОВОЕ на всех устройствах
 
@@ -362,15 +392,24 @@ document.querySelectorAll('textarea').forEach(area=>{
   // автосохранение
   let timeout;
   area.addEventListener('input', ()=>{
-    clearTimeout(timeout);
+  clearTimeout(timeout);
 
-    timeout = setTimeout(()=>{
-      db.collection("notes").doc(userId + "_" + key).set({
-        text: area.value,
-        updated: Date.now()
-      });
-    }, 500);
-  });
+  showStatus('Сохраняю...');
+
+  timeout = setTimeout(()=>{
+    db.collection("notes").doc(userId + "_" + key).set({
+      text: area.value,
+      updated: Date.now()
+    })
+    .then(()=>{
+      showStatus('Сохранено');
+    })
+    .catch(()=>{
+      showStatus('Ошибка', true);
+    });
+
+  }, 500);
+});
 });
 
 // раскрытие дней
@@ -384,6 +423,6 @@ document.querySelectorAll('.day-header').forEach(h =>
   })
 );
 </script>
-
+<div id="saveStatus" class="save-status">Сохранено</div>
 </body>
 </html>
