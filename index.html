@@ -101,7 +101,6 @@ opacity:1;
 <body>
 <div class="container">
 
-<div id="version"></div>
 
 <div class="sticky-top">
 <h1>Неделя 1</h1>
@@ -353,8 +352,6 @@ RPE: 6<br>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
-  const APP_VERSION = "1.1";
-const BUILD_TIME = new Date().toLocaleString();
 
 const firebaseConfig = {
   apiKey: "AIzaSyDtxo1jZCGMcJSTbT43cMw3NS0GaiIdfB4",
@@ -383,11 +380,6 @@ function showStatus(text, isError=false){
 // userId
 const userId = "kostya!23-74che"; // любое имя, но ОДИНАКОВОЕ на всех устройствах
 
-// вывод версии
-const versionEl = document.getElementById('version');
-if(versionEl){
-  versionEl.textContent = `v${APP_VERSION} • ${BUILD_TIME}`;
-}
 
 // TEXTAREA (главное)
 document.querySelectorAll('textarea').forEach(area=>{
