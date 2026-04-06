@@ -328,14 +328,13 @@ RPE: 6<br>
 <div class="footer">Дисциплина = результат</div>
 </div>
 
-<script>
-    <!-- Firebase -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
 const firebaseConfig = {
-   apiKey: "AIzaSyDtxo1jZCGMcJSTbT43cMw3NS0GaiIdfB4",
+  apiKey: "AIzaSyDtxo1jZCGMcJSTbT43cMw3NS0GaiIdfB4",
   authDomain: "projectone-840a9.firebaseapp.com",
   projectId: "projectone-840a9",
   storageBucket: "projectone-840a9.firebasestorage.app",
@@ -346,14 +345,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// уникальный пользователь (чтобы у тебя были свои заметки)
+// userId
 let userId = localStorage.getItem('userId');
 if(!userId){
   userId = 'user_' + Math.random().toString(36).substr(2,9);
   localStorage.setItem('userId', userId);
 }
-</script>
 
+// TEXTAREA (главное)
 document.querySelectorAll('textarea').forEach(area=>{
   const key = area.dataset.id;
 
@@ -377,18 +376,17 @@ document.querySelectorAll('textarea').forEach(area=>{
     }, 500);
   });
 });
-</script>
-})
 
+// раскрытие дней
 document.querySelectorAll('.day-header').forEach(h =>
-h.addEventListener('click', () => {
-const card = h.parentElement;
-card.classList.toggle('active');
-if(card.classList.contains('active')){
-card.scrollIntoView({behavior:'smooth', block:'start'});
-}
-})
-)
+  h.addEventListener('click', () => {
+    const card = h.parentElement;
+    card.classList.toggle('active');
+    if(card.classList.contains('active')){
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  })
+);
 </script>
 
 </body>
