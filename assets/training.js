@@ -18,11 +18,14 @@ const currentPage = window.location.pathname.split("/").pop() || "index.html";
 const storagePageKey = document.body.dataset.storagePageKey || currentPage;
 const layoutStorageKey = `training-plan-layout:${storagePrefix || "base"}:${storagePageKey}`;
 const openDaysStorageKey = `training-plan-open-days:${storagePrefix || "base"}:${storagePageKey}`;
+const periodDocId = `${userId}__${storagePrefix || "base"}__${storagePageKey}`;
+const periodDocRef = db.collection("trainingPeriods").doc(periodDocId);
 const noteDrafts = new Map();
 const defaultDayLayouts = collectDefaultDayLayouts();
 let currentDayLayouts = loadDayLayouts();
 let openDayIndexes = loadOpenDayIndexes();
 let layoutSaveTimer = null;
+let remoteLoadStarted = false;
 
 localStorage.setItem("training-plan-last-page", currentPage);
 
@@ -85,13 +88,31 @@ function normalizeExercise(exercise, fallbackId){
 }
 
 function cloneDayLayouts(layouts){
-  return layouts.map((day) => ({
-    id: day.id,
-    date: trimLine(day.date),
-    exercises: day.exercises.map((exercise, index) =>
-      normalizeExercise(exercise, `${day.id}-exercise-${index + 1}`)
+  return layouts.map((day, index) => normalizeDayLayout(day, day, index));
+}
+
+function normalizeDayLayout(day, fallbackDay, index){
+  const safeFallback = fallbackDay || { id: `day-${index + 1}`, date: "", exercises: [] };
+  const exerciseSource = Array.isArray(day?.exercises) ? day.exercises : safeFallback.exercises;
+
+  return {
+    id: trimLine(day?.id || safeFallback.id || `day-${index + 1}`),
+    date: trimLine(day?.date || safeFallback.date),
+    exercises: exerciseSource.map((exercise, exerciseIndex) =>
+      normalizeExercise(exercise, `${safeFallback.id || `day-${index + 1}`}-exercise-${exerciseIndex + 1}`)
     )
-  }));
+  };
+}
+
+function normalizeDayLayouts(days, fallbackLayouts = defaultDayLayouts){
+  if(!Array.isArray(days)){
+    return cloneDayLayouts(fallbackLayouts);
+  }
+
+  return fallbackLayouts.map((fallbackDay, index) => {
+    const rawDay = days.find((day) => day?.id === fallbackDay.id) || days[index];
+    return normalizeDayLayout(rawDay, fallbackDay, index);
+  });
 }
 
 function parseExercise(el, dayId, index, dayTitle = ""){
@@ -223,31 +244,7 @@ function collectDefaultDayLayouts(){
 function loadDayLayouts(){
   try{
     const saved = JSON.parse(localStorage.getItem(layoutStorageKey) || "null");
-    if(!Array.isArray(saved)){
-      return cloneDayLayouts(defaultDayLayouts);
-    }
-
-    const savedMap = new Map(saved.map((day) => [day.id, day]));
-    return defaultDayLayouts.map((day) => {
-      const savedDay = savedMap.get(day.id);
-      if(!savedDay || !Array.isArray(savedDay.exercises)){
-        return {
-          id: day.id,
-          date: trimLine(savedDay?.date || day.date),
-          exercises: day.exercises.map((exercise, index) =>
-            normalizeExercise(exercise, `${day.id}-exercise-${index + 1}`)
-          )
-        };
-      }
-
-      return {
-        id: day.id,
-        date: trimLine(savedDay.date || day.date),
-        exercises: savedDay.exercises.map((exercise, index) =>
-          normalizeExercise(exercise, `${day.id}-exercise-${index + 1}`)
-        )
-      };
-    });
+    return normalizeDayLayouts(saved, defaultDayLayouts);
   }catch(error){
     return cloneDayLayouts(defaultDayLayouts);
   }
@@ -255,6 +252,10 @@ function loadDayLayouts(){
 
 function saveDayLayouts(){
   localStorage.setItem(layoutStorageKey, JSON.stringify(currentDayLayouts));
+}
+
+function hasLocalPeriodState(){
+  return Boolean(localStorage.getItem(layoutStorageKey) || localStorage.getItem(openDaysStorageKey));
 }
 
 function loadOpenDayIndexes(){
@@ -277,12 +278,74 @@ function saveOpenDayIndexes(){
   localStorage.setItem(openDaysStorageKey, JSON.stringify([...openDayIndexes]));
 }
 
-function scheduleLayoutSave(){
+function persistLocalPeriodState(){
+  saveDayLayouts();
+  saveOpenDayIndexes();
+}
+
+function serializePeriodState(){
+  return {
+    userId,
+    storagePrefix: storagePrefix || "base",
+    pageKey: storagePageKey,
+    page: currentPage,
+    updatedAt: Date.now(),
+    openDays: [...openDayIndexes],
+    days: currentDayLayouts
+  };
+}
+
+async function saveRemotePeriodState(){
+  await periodDocRef.set(serializePeriodState(), { merge: true });
+}
+
+async function loadRemotePeriodState(){
+  if(remoteLoadStarted){
+    return;
+  }
+
+  remoteLoadStarted = true;
+
+  try{
+    const snapshot = await periodDocRef.get();
+    if(snapshot.exists){
+      const data = snapshot.data() || {};
+      currentDayLayouts = normalizeDayLayouts(data.days, defaultDayLayouts);
+      openDayIndexes = Array.isArray(data.openDays)
+        ? new Set(data.openDays.filter((value) => Number.isInteger(value)))
+        : loadOpenDayIndexes();
+      persistLocalPeriodState();
+      renderAllDayCards();
+      return;
+    }
+
+    if(hasLocalPeriodState()){
+      await saveRemotePeriodState();
+    }
+  }catch(error){
+    showStatus("Ошибка облака", true);
+  }
+}
+
+function scheduleLayoutSave(showFeedback = true){
   clearTimeout(layoutSaveTimer);
-  showStatus("Сохраняю...");
-  layoutSaveTimer = setTimeout(() => {
-    saveDayLayouts();
-    showStatus("Сохранено");
+  persistLocalPeriodState();
+
+  if(showFeedback){
+    showStatus("Сохраняю...");
+  }
+
+  layoutSaveTimer = setTimeout(async () => {
+    try{
+      await saveRemotePeriodState();
+      if(showFeedback){
+        showStatus("Сохранено");
+      }
+    }catch(error){
+      if(showFeedback){
+        showStatus("Ошибка", true);
+      }
+    }
   }, 250);
 }
 
@@ -605,6 +668,7 @@ document.querySelectorAll(".day-header").forEach((header) => {
       openDayIndexes.delete(cardIndex);
     }
     saveOpenDayIndexes();
+    scheduleLayoutSave(false);
 
     if(card.classList.contains("active")){
       card.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -741,3 +805,4 @@ document.querySelectorAll(".day-card").forEach((card, index) => {
 });
 
 renderAllDayCards();
+loadRemotePeriodState();

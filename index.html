@@ -209,7 +209,24 @@ h1{
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDtxo1jZCGMcJSTbT43cMw3NS0GaiIdfB4",
+  authDomain: "projectone-840a9.firebaseapp.com",
+  projectId: "projectone-840a9",
+  storageBucket: "projectone-840a9.firebasestorage.app",
+  messagingSenderId: "4790278545",
+  appId: "1:4790278545:web:970d5aa6058d1d524ae230"
+};
+
+if(!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
+}
+
+const db = firebase.firestore();
+const userId = "kostya!23-74che";
 const params = new URLSearchParams(window.location.search);
 const lastPage = localStorage.getItem("training-plan-last-page");
 const pageMap = {
@@ -229,7 +246,7 @@ function formatDate(value){
   return `${match[3]}.${match[2]}.${match[1]}`;
 }
 
-function readWeekRange(storagePrefix, fileName){
+function readWeekRangeFromLocal(storagePrefix, fileName){
   try{
     const key = `training-plan-layout:${storagePrefix}:${fileName}`;
     const saved = JSON.parse(localStorage.getItem(key) || "null");
@@ -260,6 +277,52 @@ function readWeekRange(storagePrefix, fileName){
   }
 }
 
+async function readWeekRangeFromCloud(storagePrefix, fileName){
+  try{
+    const docId = `${userId}__${storagePrefix}__${fileName}`;
+    const snapshot = await db.collection("trainingPeriods").doc(docId).get();
+    if(!snapshot.exists){
+      return "";
+    }
+
+    const data = snapshot.data() || {};
+    const dates = Array.isArray(data.days)
+      ? data.days.map((day) => String(day?.date || "").trim()).filter(Boolean).sort()
+      : [];
+
+    if(!dates.length){
+      return "";
+    }
+
+    const start = formatDate(dates[0]);
+    const end = formatDate(dates[dates.length - 1]);
+    if(start && end && start !== end){
+      return `${start} - ${end}`;
+    }
+    return start || end;
+  }catch(error){
+    return "";
+  }
+}
+
+async function hydrateWeekRanges(){
+  const cards = Array.from(document.querySelectorAll("[data-storage-file]"));
+  await Promise.all(cards.map(async (card) => {
+    const fileName = card.dataset.storageFile;
+    const storagePrefix = card.dataset.storagePrefix || "base";
+    const target = card.querySelector("[data-week-dates]");
+    if(!target){
+      return;
+    }
+
+    const cloudValue = await readWeekRangeFromCloud(storagePrefix, fileName);
+    const fallbackValue = readWeekRangeFromLocal(storagePrefix, fileName);
+    target.textContent = cloudValue || fallbackValue || "Даты не указаны";
+  }));
+}
+
+hydrateWeekRanges();
+
 document.querySelectorAll("[data-storage-file]").forEach((card) => {
   const fileName = card.dataset.storageFile;
   const storagePrefix = card.dataset.storagePrefix || "base";
@@ -267,9 +330,7 @@ document.querySelectorAll("[data-storage-file]").forEach((card) => {
   if(!target){
     return;
   }
-
-  const value = readWeekRange(storagePrefix, fileName);
-  target.textContent = value || "Даты не указаны";
+  target.textContent = readWeekRangeFromLocal(storagePrefix, fileName) || "Даты не указаны";
 });
 
 if(!params.has("home") && isPeriodPage){
