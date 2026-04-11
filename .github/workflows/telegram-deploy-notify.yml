@@ -28,6 +28,16 @@ jobs:
           VERSION: ${{ steps.version.outputs.value }}
           COMMIT_SHA: ${{ github.sha }}
         run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ]; then
+            echo "::error::Missing TELEGRAM_BOT_TOKEN secret"
+            exit 1
+          fi
+
+          if [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "::error::Missing TELEGRAM_CHAT_ID secret"
+            exit 1
+          fi
+
           SHORT_SHA=$(printf '%s' "$COMMIT_SHA" | cut -c1-7)
           MESSAGE=$(cat <<EOF
           Сайт обновлен
@@ -37,6 +47,15 @@ jobs:
           EOF
           )
 
-          curl -fsSL -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+          RESPONSE_FILE=$(mktemp)
+          HTTP_CODE=$(curl -sS -o "$RESPONSE_FILE" -w "%{http_code}" -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-            --data-urlencode "text=${MESSAGE}"
+            --data-urlencode "text=${MESSAGE}")
+
+          echo "Telegram HTTP status: ${HTTP_CODE}"
+          cat "$RESPONSE_FILE"
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "::error::Telegram request failed"
+            exit 1
+          fi
