@@ -68,10 +68,9 @@ h1{
   margin-top:18px;
 }
 
-.week-link{
-  display:block;
-  text-decoration:none;
-  color:inherit;
+.week-card{
+  display:flex;
+  flex-direction:column;
   padding:18px;
   border-radius:18px;
   border:1px solid var(--line);
@@ -79,7 +78,7 @@ h1{
   transition:transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.week-link:hover{
+.week-card:hover{
   transform:translateY(-2px);
   border-color:var(--accent);
   box-shadow:0 14px 32px rgba(31,111,95,0.12);
@@ -96,13 +95,13 @@ h1{
   color:#12463b;
 }
 
-.week-link strong{
+.week-card strong{
   display:block;
   margin-bottom:6px;
   font-size:20px;
 }
 
-.week-link p{
+.week-card p{
   margin:0 0 16px;
   color:var(--muted);
   line-height:1.55;
@@ -138,6 +137,39 @@ h1{
   color:var(--accent);
 }
 
+.week-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:auto;
+}
+
+.week-action-link,
+.week-export-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px;
+  padding:0 14px;
+  border-radius:12px;
+  font:inherit;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.week-action-link{
+  color:#fff;
+  background:var(--accent);
+  font-weight:700;
+}
+
+.week-export-btn{
+  border:1px solid #d8cfbf;
+  background:#f7f2e8;
+  color:var(--text);
+  font-weight:600;
+}
+
 .note{
   margin-top:18px;
   padding:16px 18px;
@@ -170,7 +202,7 @@ h1{
   </section>
 
   <section class="grid">
-    <a class="week-link" href="period1.html" data-storage-file="week1.html" data-storage-prefix="base">
+    <div class="week-card" data-storage-file="week1.html" data-storage-prefix="base" data-period-label="period1">
       <span class="week-tag">Период 1</span>
       <strong>Базовый блок</strong>
       <p>Силовые, бег, интервалы и восстановление в исходной структуре.</p>
@@ -178,10 +210,13 @@ h1{
         <span class="week-dates-label">Период дат</span>
         <span class="week-dates-value" data-week-dates>Даты не указаны</span>
       </div>
-      <span class="week-action">Открыть период</span>
-    </a>
+      <div class="week-actions">
+        <a class="week-action-link" href="period1.html">Открыть период</a>
+        <button class="week-export-btn" type="button" data-action="export-period">Экспорт периода в JSON</button>
+      </div>
+    </div>
 
-    <a class="week-link" href="period2.html" data-storage-file="week2.html" data-storage-prefix="week2">
+    <div class="week-card" data-storage-file="week2.html" data-storage-prefix="week2" data-period-label="period2">
       <span class="week-tag">Период 2</span>
       <strong>Неделя восстановления</strong>
       <p>Лёгкий бег, ноги без перегруза, кор, плечи и отдельные правила на восстановление.</p>
@@ -189,10 +224,13 @@ h1{
         <span class="week-dates-label">Период дат</span>
         <span class="week-dates-value" data-week-dates>Даты не указаны</span>
       </div>
-      <span class="week-action">Открыть период</span>
-    </a>
+      <div class="week-actions">
+        <a class="week-action-link" href="period2.html">Открыть период</a>
+        <button class="week-export-btn" type="button" data-action="export-period">Экспорт периода в JSON</button>
+      </div>
+    </div>
 
-    <a class="week-link" href="period3.html" data-storage-file="week3.html" data-storage-prefix="week3">
+    <div class="week-card" data-storage-file="week3.html" data-storage-prefix="week3" data-period-label="period3">
       <span class="week-tag">Период 3</span>
       <strong>Новый блок</strong>
       <p>Силовая работа, лёгкое кардио, база и бокс на отдельной странице.</p>
@@ -200,8 +238,11 @@ h1{
         <span class="week-dates-label">Период дат</span>
         <span class="week-dates-value" data-week-dates>Даты не указаны</span>
       </div>
-      <span class="week-action">Открыть период</span>
-    </a>
+      <div class="week-actions">
+        <a class="week-action-link" href="period3.html">Открыть период</a>
+        <button class="week-export-btn" type="button" data-action="export-period">Экспорт периода в JSON</button>
+      </div>
+    </div>
   </section>
 
   <div class="note">
@@ -305,6 +346,43 @@ async function readWeekRangeFromCloud(storagePrefix, fileName){
   }
 }
 
+function readWeekStateFromLocal(storagePrefix, fileName){
+  try{
+    const key = `training-plan-layout:${storagePrefix}:${fileName}`;
+    const saved = JSON.parse(localStorage.getItem(key) || "null");
+    return Array.isArray(saved) ? saved : null;
+  }catch(error){
+    return null;
+  }
+}
+
+async function readWeekStateFromCloud(storagePrefix, fileName){
+  try{
+    const docId = `${userId}__${storagePrefix}__${fileName}`;
+    const snapshot = await db.collection("trainingPeriods").doc(docId).get();
+    if(!snapshot.exists){
+      return null;
+    }
+
+    const data = snapshot.data() || {};
+    return Array.isArray(data.days) ? data : null;
+  }catch(error){
+    return null;
+  }
+}
+
+function downloadJson(filename, data){
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 async function hydrateWeekRanges(){
   const cards = Array.from(document.querySelectorAll("[data-storage-file]"));
   await Promise.all(cards.map(async (card) => {
@@ -331,6 +409,53 @@ document.querySelectorAll("[data-storage-file]").forEach((card) => {
     return;
   }
   target.textContent = readWeekRangeFromLocal(storagePrefix, fileName) || "Даты не указаны";
+});
+
+document.querySelectorAll('[data-action="export-period"]').forEach((button) => {
+  button.addEventListener("click", async () => {
+    const card = button.closest("[data-storage-file]");
+    if(!card){
+      return;
+    }
+
+    const storagePrefix = card.dataset.storagePrefix || "base";
+    const fileName = card.dataset.storageFile;
+    const periodLabel = card.dataset.periodLabel || fileName.replace(".html", "");
+    const title = card.querySelector("strong")?.textContent?.trim() || periodLabel;
+    const dates = card.querySelector("[data-week-dates]")?.textContent?.trim() || "";
+
+    button.disabled = true;
+    button.textContent = "Экспорт...";
+
+    const cloudState = await readWeekStateFromCloud(storagePrefix, fileName);
+    const localDays = readWeekStateFromLocal(storagePrefix, fileName);
+    const payload = cloudState
+      ? {
+          exportedAt: new Date().toISOString(),
+          source: "firestore",
+          period: periodLabel,
+          title,
+          dateRange: dates,
+          storagePrefix,
+          storageFile: fileName,
+          ...cloudState
+        }
+      : {
+          exportedAt: new Date().toISOString(),
+          source: "localStorage",
+          period: periodLabel,
+          title,
+          dateRange: dates,
+          storagePrefix,
+          storageFile: fileName,
+          days: localDays || []
+        };
+
+    downloadJson(`${periodLabel}.json`, payload);
+
+    button.disabled = false;
+    button.textContent = "Экспорт периода в JSON";
+  });
 });
 
 if(!params.has("home") && isPeriodPage){
