@@ -114,6 +114,15 @@ h1{
   transition:transform 0.2s ease;
 }
 
+.day-header-date{
+  margin-left:auto;
+  margin-right:8px;
+  color:#7d756d;
+  font-size:12px;
+  font-weight:400;
+  white-space:nowrap;
+}
+
 .day-content{
   padding:12px;
   display:none;
@@ -125,6 +134,40 @@ h1{
 
 .day-card.active .day-arrow{
   transform:rotate(180deg);
+}
+
+.day-date-row{
+  margin-bottom:10px;
+}
+
+.day-date-field{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#f7f2ea;
+  border:1px solid #ece4d8;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+
+.day-date-input{
+  min-height:36px;
+  padding:0 10px;
+  border:1px solid var(--line-strong);
+  border-radius:8px;
+  background:#fff;
+  color:var(--text);
+  font:inherit;
+}
+
+.day-date-input:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(31,111,95,0.1);
 }
 
 .exercise{
@@ -141,6 +184,108 @@ h1{
   margin-bottom:0;
 }
 
+.exercise-compact{
+  padding:10px;
+}
+
+.exercise-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.exercise-heading{
+  min-width:0;
+}
+
+.exercise-heading b{
+  display:block;
+}
+
+.exercise-icon-btn{
+  width:28px;
+  height:28px;
+  border:none;
+  border-radius:8px;
+  background:#efe5d8;
+  color:#6b433e;
+  font-size:18px;
+  line-height:1;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+
+.exercise-icon-btn:hover{
+  background:#e7d8c5;
+}
+
+.exercise-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:8px;
+  align-items:center;
+}
+
+.exercise-pill{
+  display:inline-flex;
+  align-items:center;
+  min-height:34px;
+  padding:0 10px;
+  border-radius:999px;
+  background:#efe9df;
+  color:var(--text);
+  font-size:12px;
+  font-weight:700;
+}
+
+.exercise-weight{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:34px;
+  padding:0 8px 0 10px;
+  border-radius:999px;
+  background:#ffffff;
+  border:1px solid var(--line);
+  font-size:12px;
+  color:var(--muted);
+}
+
+.exercise-metric-wide .weight-input{
+  width:100px;
+}
+
+.exercise-weight span{
+  font-weight:700;
+}
+
+.weight-input{
+  width:72px;
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font:inherit;
+  padding:0;
+}
+
+.weight-input:focus{
+  outline:none;
+}
+
+.exercise-lines{
+  margin-top:8px;
+  display:grid;
+  gap:4px;
+}
+
+.exercise-line{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
 .badge{
   display:inline-block;
   padding:2px 7px;
@@ -153,7 +298,7 @@ h1{
 
 textarea{
   width:100%;
-  min-height:78px;
+  min-height:68px;
   margin-top:8px;
   background:#fff;
   border:1px solid var(--line-strong);
@@ -176,6 +321,89 @@ textarea:focus{
   color:#6d665f;
   margin-top:20px;
   font-size:13px;
+}
+
+.exercise-add-panel{
+  margin-top:10px;
+  padding-top:2px;
+}
+
+.exercise-add-toggle,
+.exercise-submit-btn,
+.exercise-cancel-btn{
+  border:none;
+  border-radius:10px;
+  font:inherit;
+  cursor:pointer;
+}
+
+.exercise-add-toggle{
+  padding:10px 12px;
+  background:#edf3f0;
+  color:var(--accent-text);
+  font-weight:700;
+}
+
+.exercise-add-form{
+  margin-top:8px;
+  display:grid;
+  gap:8px;
+  padding:10px;
+  border:1px dashed var(--line-strong);
+  border-radius:10px;
+  background:rgba(255,255,255,0.7);
+}
+
+.exercise-add-grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:8px;
+}
+
+.compact-input,
+.compact-textarea{
+  width:100%;
+  border:1px solid var(--line-strong);
+  border-radius:8px;
+  background:#fff;
+  font:inherit;
+  color:var(--text);
+}
+
+.compact-input{
+  height:40px;
+  padding:0 12px;
+}
+
+.compact-textarea{
+  min-height:66px;
+  padding:10px 12px;
+  resize:vertical;
+}
+
+.compact-input:focus,
+.compact-textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(31,111,95,0.1);
+}
+
+.exercise-form-actions{
+  display:flex;
+  gap:8px;
+}
+
+.exercise-submit-btn{
+  padding:10px 12px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:700;
+}
+
+.exercise-cancel-btn{
+  padding:10px 12px;
+  background:#eee7dc;
+  color:var(--text);
 }
 
 .save-status{
@@ -208,5 +436,9 @@ textarea:focus{
 
   .day-header{
     align-items:flex-start;
+  }
+
+  .exercise-add-grid{
+    grid-template-columns:1fr;
   }
 }

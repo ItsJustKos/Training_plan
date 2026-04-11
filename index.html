@@ -108,6 +108,31 @@ h1{
   line-height:1.55;
 }
 
+.week-dates{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:14px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:#f6f2ea;
+  border:1px solid #e4dbce;
+}
+
+.week-dates-label{
+  font-size:12px;
+  font-weight:700;
+  color:#7a7066;
+}
+
+.week-dates-value{
+  text-align:right;
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+}
+
 .week-action{
   font-weight:700;
   color:var(--accent);
@@ -141,37 +166,114 @@ h1{
 
   <section class="hero">
     <h1>Training Plan</h1>
-    <p class="subtitle">Главная страница теперь ведёт на отдельные недели. Дальше можно спокойно добавлять `week3.html`, `week4.html` и просто дописывать сюда новую ссылку.</p>
+    <p class="subtitle">Главная страница теперь ведёт на отдельные периоды. Дальше можно спокойно добавлять новые страницы и просто дописывать сюда новую ссылку.</p>
   </section>
 
   <section class="grid">
-    <a class="week-link" href="week1.html">
-      <span class="week-tag">Неделя 1</span>
+    <a class="week-link" href="period1.html" data-storage-file="week1.html" data-storage-prefix="base">
+      <span class="week-tag">Период 1</span>
       <strong>Базовый блок</strong>
       <p>Силовые, бег, интервалы и восстановление в исходной структуре.</p>
-      <span class="week-action">Открыть неделю</span>
+      <div class="week-dates">
+        <span class="week-dates-label">Период дат</span>
+        <span class="week-dates-value" data-week-dates>Даты не указаны</span>
+      </div>
+      <span class="week-action">Открыть период</span>
     </a>
 
-    <a class="week-link" href="week2.html">
-      <span class="week-tag">Неделя 2</span>
+    <a class="week-link" href="period2.html" data-storage-file="week2.html" data-storage-prefix="week2">
+      <span class="week-tag">Период 2</span>
+      <strong>Неделя восстановления</strong>
+      <p>Лёгкий бег, ноги без перегруза, кор, плечи и отдельные правила на восстановление.</p>
+      <div class="week-dates">
+        <span class="week-dates-label">Период дат</span>
+        <span class="week-dates-value" data-week-dates>Даты не указаны</span>
+      </div>
+      <span class="week-action">Открыть период</span>
+    </a>
+
+    <a class="week-link" href="period3.html" data-storage-file="week3.html" data-storage-prefix="week3">
+      <span class="week-tag">Период 3</span>
       <strong>Новый блок</strong>
       <p>Силовая работа, лёгкое кардио, база и бокс на отдельной странице.</p>
-      <span class="week-action">Открыть неделю</span>
+      <div class="week-dates">
+        <span class="week-dates-label">Период дат</span>
+        <span class="week-dates-value" data-week-dates>Даты не указаны</span>
+      </div>
+      <span class="week-action">Открыть период</span>
     </a>
   </section>
 
   <div class="note">
-    Чтобы добавить следующую неделю, достаточно создать новый файл по той же структуре и добавить сюда ещё одну карточку-ссылку.
+    Чтобы добавить следующий период, достаточно создать новый файл по той же структуре и добавить сюда ещё одну карточку-ссылку.
   </div>
 </div>
 
 <script>
 const params = new URLSearchParams(window.location.search);
 const lastPage = localStorage.getItem("training-plan-last-page");
-const isWeekPage = /^week[\w-]*\.html$/i.test(lastPage || "");
+const pageMap = {
+  "week1.html": "period1.html",
+  "week2.html": "period2.html",
+  "week3.html": "period3.html"
+};
+const resolvedLastPage = pageMap[lastPage] || lastPage;
+const isPeriodPage = /^(?:week|period)[\w-]*\.html$/i.test(resolvedLastPage || "");
 
-if(!params.has("home") && isWeekPage){
-  window.location.replace(lastPage);
+function formatDate(value){
+  const match = String(value || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!match){
+    return "";
+  }
+
+  return `${match[3]}.${match[2]}.${match[1]}`;
+}
+
+function readWeekRange(storagePrefix, fileName){
+  try{
+    const key = `training-plan-layout:${storagePrefix}:${fileName}`;
+    const saved = JSON.parse(localStorage.getItem(key) || "null");
+    if(!Array.isArray(saved)){
+      return "";
+    }
+
+    const dates = saved
+      .map((day) => String(day?.date || "").trim())
+      .filter(Boolean)
+      .sort();
+
+    if(!dates.length){
+      return "";
+    }
+
+    const start = formatDate(dates[0]);
+    const end = formatDate(dates[dates.length - 1]);
+    if(!start && !end){
+      return "";
+    }
+    if(start && end && start !== end){
+      return `${start} - ${end}`;
+    }
+    return start || end;
+  }catch(error){
+    return "";
+  }
+}
+
+document.querySelectorAll("[data-storage-file]").forEach((card) => {
+  const fileName = card.dataset.storageFile;
+  const storagePrefix = card.dataset.storagePrefix || "base";
+  const target = card.querySelector("[data-week-dates]");
+  if(!target){
+    return;
+  }
+
+  const value = readWeekRange(storagePrefix, fileName);
+  target.textContent = value || "Даты не указаны";
+});
+
+if(!params.has("home") && isPeriodPage){
+  window.location.replace(resolvedLastPage);
 }
 </script>
 </body>
