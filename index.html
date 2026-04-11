@@ -97,14 +97,8 @@ h1{
 
 .week-card strong{
   display:block;
-  margin-bottom:6px;
+  margin-bottom:8px;
   font-size:20px;
-}
-
-.week-card p{
-  margin:0 0 16px;
-  color:var(--muted);
-  line-height:1.55;
 }
 
 .week-dates{
@@ -139,8 +133,9 @@ h1{
 
 .week-actions{
   display:flex;
-  flex-wrap:wrap;
-  gap:8px;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
   margin-top:auto;
 }
 
@@ -164,10 +159,14 @@ h1{
 }
 
 .week-export-btn{
+  min-height:32px;
+  padding:0 10px;
+  border-radius:10px;
   border:1px solid #d8cfbf;
   background:#f7f2e8;
   color:var(--text);
-  font-weight:600;
+  font-size:12px;
+  font-weight:400;
 }
 
 .note{
@@ -194,7 +193,7 @@ h1{
 
 <body>
 <div class="container">
-  <div class="version">version 2.0</div>
+  <div class="version">version 2.1</div>
 
   <section class="hero">
     <h1>Training Plan</h1>
@@ -205,13 +204,14 @@ h1{
     <div class="week-card" data-storage-file="week1.html" data-storage-prefix="base" data-period-label="period1">
       <span class="week-tag">Период 1</span>
       <strong>Базовый блок</strong>
-      <p>Силовые, бег, интервалы и восстановление в исходной структуре.</p>
+      <div class="week-actions">
+        <a class="week-action-link" href="period1.html">Открыть период</a>
+      </div>
       <div class="week-dates">
         <span class="week-dates-label">Период дат</span>
         <span class="week-dates-value" data-week-dates>Даты не указаны</span>
       </div>
       <div class="week-actions">
-        <a class="week-action-link" href="period1.html">Открыть период</a>
         <button class="week-export-btn" type="button" data-action="export-period">Экспорт периода в JSON</button>
       </div>
     </div>
@@ -219,13 +219,14 @@ h1{
     <div class="week-card" data-storage-file="week2.html" data-storage-prefix="week2" data-period-label="period2">
       <span class="week-tag">Период 2</span>
       <strong>Неделя восстановления</strong>
-      <p>Лёгкий бег, ноги без перегруза, кор, плечи и отдельные правила на восстановление.</p>
+      <div class="week-actions">
+        <a class="week-action-link" href="period2.html">Открыть период</a>
+      </div>
       <div class="week-dates">
         <span class="week-dates-label">Период дат</span>
         <span class="week-dates-value" data-week-dates>Даты не указаны</span>
       </div>
       <div class="week-actions">
-        <a class="week-action-link" href="period2.html">Открыть период</a>
         <button class="week-export-btn" type="button" data-action="export-period">Экспорт периода в JSON</button>
       </div>
     </div>
@@ -233,13 +234,14 @@ h1{
     <div class="week-card" data-storage-file="week3.html" data-storage-prefix="week3" data-period-label="period3">
       <span class="week-tag">Период 3</span>
       <strong>Новый блок</strong>
-      <p>Силовая работа, лёгкое кардио, база и бокс на отдельной странице.</p>
+      <div class="week-actions">
+        <a class="week-action-link" href="period3.html">Открыть период</a>
+      </div>
       <div class="week-dates">
         <span class="week-dates-label">Период дат</span>
         <span class="week-dates-value" data-week-dates>Даты не указаны</span>
       </div>
       <div class="week-actions">
-        <a class="week-action-link" href="period3.html">Открыть период</a>
         <button class="week-export-btn" type="button" data-action="export-period">Экспорт периода в JSON</button>
       </div>
     </div>
